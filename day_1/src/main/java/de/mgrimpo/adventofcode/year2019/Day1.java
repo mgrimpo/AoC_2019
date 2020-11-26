@@ -12,36 +12,42 @@ public class Day1 {
   public static void main(String[] args) throws IOException {
     Path inputFile = Paths.get("input.txt");
     List<Long> moduleMasses = readModuleMasses(inputFile);
-    long result = calculateModuleFuelRequirements(moduleMasses);
-    System.out.println(result);
+    long puzzleOneResult = netFuelRequiredForModules(moduleMasses);
+    System.out.printf("The net fuel requirements for all modules are: %s\n",  puzzleOneResult);
+    long puzzleTwoResult = totalFuelRequiredForModules(moduleMasses);
+    System.out.printf("The overall fuel requirements, including fuel for fuel mass, are: %s\n",  puzzleTwoResult);
   }
 
-
-  private static long calculateFuelForFuelMass(long fuelMass){
-    long fuelRequirements = fuelRequiredForMass(fuelMass);
+  private static long fuelForFuelMass(long fuelMass) {
+    long fuelRequirements = netFuelForMass(fuelMass);
     if (fuelRequirements <= 0) {
       return 0;
     } else {
-      return  fuelRequirements + calculateFuelForFuelMass(fuelRequirements);
+      return fuelRequirements + fuelForFuelMass(fuelRequirements);
     }
   }
 
-  private static Long calculateModuleFuelRequirements(List<Long> moduleMasses) {
-    return moduleMasses
-        .stream()
-        .map(Day1::fuelRequiredForMass)
-        .map(fuelMass -> fuelMass + calculateFuelForFuelMass(fuelMass))
-        .reduce(Long::sum)
-        .get();
+  private static Long netFuelRequiredForModules(List<Long> moduleMasses) {
+    return moduleMasses.stream()
+        .mapToLong(Day1::netFuelForMass)
+        .sum();
   }
 
-  private static long fuelRequiredForMass(long mass) {
-    return (mass /3 ) - 2;
+  private static Long totalFuelRequiredForModules(List<Long> moduleMasses) {
+    return moduleMasses.stream()
+        .mapToLong(Day1::totalFuelForMass)
+        .sum();
+  }
+
+  private static long netFuelForMass(long mass) {
+    return (mass / 3) - 2;
+  }
+
+  private static long totalFuelForMass(long mass) {
+    return netFuelForMass(mass) + fuelForFuelMass(netFuelForMass(mass));
   }
 
   private static List<Long> readModuleMasses(Path statsPath) throws IOException {
-    return Files.lines(statsPath)
-        .map(Long::parseLong)
-        .collect(Collectors.toList());
+    return Files.lines(statsPath).map(Long::parseLong).collect(Collectors.toList());
   }
 }
