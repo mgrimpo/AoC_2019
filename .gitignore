@@ -1,5 +1,5 @@
 #  --- Custom rules ---
-.idea/**/$CACHE_FILE$
+.idea
 .java-version
 # Ignore Gradle project-specific cache directory
 .gradle
