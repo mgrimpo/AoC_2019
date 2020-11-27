@@ -3,6 +3,8 @@
  */
 package de.mgrimpo.adventofcode.year2019;
 
+import de.mgrimpo.adventofcode.year2019.intcodemachine.HaltingInstruction;
+import de.mgrimpo.adventofcode.year2019.intcodemachine.InstructionFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,33 +13,18 @@ import java.util.Arrays;
 
 public class Day2 {
 
-  public static int[] executeIntCodeProgram(int[] intCodeProgram) {
-    intCodeProgram = intCodeProgram.clone();
-    for (int i = 0; i < intCodeProgram.length; i += 4) {
-      var opCode = intCodeProgram[i];
-      if (opCode == 99) {
+  public static int[] executeIntCodeProgram(int[] programMemory) {
+    programMemory = programMemory.clone();
+    for (int instructionPointer = 0; instructionPointer < programMemory.length; instructionPointer += 4) {
+      var instruction = InstructionFactory.createInstruction(programMemory,instructionPointer);
+      if (instruction instanceof HaltingInstruction) {
         break;
       }
-      var firstOperandAddress = intCodeProgram[i + 1];
-      var secondOperandAddress = intCodeProgram[i + 2];
-      var resultAddress = intCodeProgram[i + 3];
-      intCodeProgram[resultAddress] =
-          calculateOpCodeResult(
-              opCode, intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
+      instruction.execute(programMemory);
     }
-    return intCodeProgram;
+    return programMemory;
   }
 
-  private static int calculateOpCodeResult(int opCode, int firstOperand, int secondOperand) {
-    switch (opCode) {
-      case 1:
-        return firstOperand + secondOperand;
-      case 2:
-        return firstOperand * secondOperand;
-      default:
-        throw new RuntimeException("Invalid Op Code");
-    }
-  }
 
   public static void main(String[] args) throws IOException {
     var puzzleInput = readPuzzleInput(Paths.get("input.txt"));
@@ -53,13 +40,13 @@ public class Day2 {
   }
 
   private static int findInputForOutput(int desiredOutput, int[] programMemory) {
-    for (int i = 0; i < 10000; i++) {
-      var noun = i / 100;
-      var verb = i % 100;
+    for (int nounVerbCode = 0; nounVerbCode < 10000; nounVerbCode++) {
+      var noun = nounVerbCode / 100;
+      var verb = nounVerbCode % 100;
       var memoryCopy = programMemory.clone();
       setInputMemory(memoryCopy, noun, verb);
       var resultMemory = executeIntCodeProgram(memoryCopy);
-      if (resultMemory[0] == desiredOutput) return i;
+      if (resultMemory[0] == desiredOutput) return nounVerbCode;
     }
     throw new RuntimeException("No noun/verb combination for the desired output was found.");
   }
@@ -77,13 +64,15 @@ public class Day2 {
     System.out.printf("The value at position 0 is: %s\n", puzzleOneSolution);
   }
 
-  private static void restore1202AlarmState(int[] intCodeProgram) {
-    intCodeProgram[1] = 12;
-    intCodeProgram[2] = 2;
+  private static void restore1202AlarmState(int[] programMemory) {
+    setInputMemory(programMemory, 12, 02);
   }
 
   private static int[] readPuzzleInput(Path path) throws IOException {
     var intCodeArray = Files.readString(path).split(",");
-    return Arrays.stream(intCodeArray).mapToInt(Integer::parseInt).toArray();
+    return Arrays.stream(intCodeArray)
+        .mapToInt(Integer::parseInt)
+        .toArray();
   }
+
 }
