@@ -3,31 +3,64 @@
  */
 package de.mgrimpo.adventofcode.year2019;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 public class Day2 {
 
-    public static int[] executeIntCodeProgram(int[] intCodeProgram) {
-        intCodeProgram = intCodeProgram.clone();
-        for (int i=0; i < intCodeProgram.length; i += 4) {
-            var opCode = intCodeProgram[i];
-            if (opCode == 99) break;
-            var firstOperandAddress  = intCodeProgram[i + 1];
-            var secondOperandAddress = intCodeProgram[i + 2];
-            var resultAddress = intCodeProgram[i + 3];
-            intCodeProgram[resultAddress] = calculateOpCodeResult(opCode, intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
-        }
-        return intCodeProgram;
+  public static int[] executeIntCodeProgram(int[] intCodeProgram) {
+    intCodeProgram = intCodeProgram.clone();
+    for (int i = 0; i < intCodeProgram.length; i += 4) {
+      var opCode = intCodeProgram[i];
+      if (opCode == 99) {
+        break;
+      }
+      var firstOperandAddress = intCodeProgram[i + 1];
+      var secondOperandAddress = intCodeProgram[i + 2];
+      var resultAddress = intCodeProgram[i + 3];
+      intCodeProgram[resultAddress] = calculateOpCodeResult(opCode,
+          intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
     }
+    return intCodeProgram;
+  }
 
-    private static int calculateOpCodeResult(int opCode, int firstOperand, int secondOperand) {
-        switch(opCode){
-           case 1 : return firstOperand + secondOperand;
-           case 2 : return firstOperand * secondOperand;
-           default: throw new RuntimeException("Invalid Op Code");
-        }
+  private static int calculateOpCodeResult(int opCode, int firstOperand, int secondOperand) {
+    switch (opCode) {
+      case 1:
+        return firstOperand + secondOperand;
+      case 2:
+        return firstOperand * secondOperand;
+      default:
+        throw new RuntimeException("Invalid Op Code");
     }
+  }
 
 
-    public static void main(String[] args) {
-        System.out.println("Day 2 : Puzzle 1");
-    }
+  public static void main(String[] args) throws IOException {
+    puzzleOne();
+  }
+
+  private static void puzzleOne() throws IOException {
+    System.out.println("Day 2 : Puzzle 1");
+    var puzzleInput = readPuzzleInput(Paths.get("input.txt"));
+    restore1202AlarmState(puzzleInput);
+    var resultIntCodeState = executeIntCodeProgram(puzzleInput);
+    var puzzleOneSolution = resultIntCodeState[0];
+    System.out.printf("The value at position 0 is: %s\n", puzzleOneSolution);
+  }
+
+  private static void restore1202AlarmState(int[] intCodeProgram) {
+    intCodeProgram[1] = 12;
+    intCodeProgram[2] = 2;
+  }
+
+  private static int[] readPuzzleInput(Path path) throws IOException {
+    var intCodeArray = Files.readString(path).split(",");
+    return Arrays.stream(intCodeArray)
+        .mapToInt(Integer::parseInt)
+        .toArray();
+  }
 }
