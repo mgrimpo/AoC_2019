@@ -4,11 +4,30 @@
 package de.mgrimpo.adventofcode.year2019;
 
 public class Day2 {
-    public String getGreeting() {
-        return "Hello World!";
+
+    public static int[] executeIntCodeProgram(int[] intCodeProgram) {
+        intCodeProgram = intCodeProgram.clone();
+        for (int i=0; i < intCodeProgram.length; i += 4) {
+            var opCode = intCodeProgram[i];
+            if (opCode == 99) break;
+            var firstOperandAddress  = intCodeProgram[i + 1];
+            var secondOperandAddress = intCodeProgram[i + 2];
+            var resultAddress = intCodeProgram[i + 3];
+            intCodeProgram[resultAddress] = calculateOpCodeResult(opCode, intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
+        }
+        return intCodeProgram;
     }
 
+    private static int calculateOpCodeResult(int opCode, int firstOperand, int secondOperand) {
+        switch(opCode){
+           case 1 : return firstOperand + secondOperand;
+           case 2 : return firstOperand * secondOperand;
+           default: throw new RuntimeException("Invalid Op Code");
+        }
+    }
+
+
     public static void main(String[] args) {
-        System.out.println(new Day2().getGreeting());
+        System.out.println("Day 2 : Puzzle 1");
     }
 }
