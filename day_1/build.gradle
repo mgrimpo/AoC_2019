@@ -15,8 +15,15 @@ dependencies {
     testImplementation 'junit:junit:4.11'
 }
 
+def _mainClass = 'de.mgrimpo.adventofcode.year2019.Day1'
+
 application {
-    mainClass = 'de.mgrimpo.adventofcode.year2019.Day1'
+    mainClass = _mainClass
+}
+jar {
+    manifest{
+        attributes["Main-Class"] = _mainClass
+    }
 }
 java.sourceCompatibility = JavaVersion.VERSION_11
 
