@@ -21,8 +21,9 @@ public class Day2 {
       var firstOperandAddress = intCodeProgram[i + 1];
       var secondOperandAddress = intCodeProgram[i + 2];
       var resultAddress = intCodeProgram[i + 3];
-      intCodeProgram[resultAddress] = calculateOpCodeResult(opCode,
-          intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
+      intCodeProgram[resultAddress] =
+          calculateOpCodeResult(
+              opCode, intCodeProgram[firstOperandAddress], intCodeProgram[secondOperandAddress]);
     }
     return intCodeProgram;
   }
@@ -38,14 +39,38 @@ public class Day2 {
     }
   }
 
-
   public static void main(String[] args) throws IOException {
-    puzzleOne();
+    var puzzleInput = readPuzzleInput(Paths.get("input.txt"));
+    puzzleOne(puzzleInput);
+    puzzleTwo(puzzleInput);
   }
 
-  private static void puzzleOne() throws IOException {
+  private static void puzzleTwo(int[] puzzleInput) {
+    System.out.println("Day 2 : Puzzle 2");
+    final var desiredOutput = 19690720;
+    final var nounVerbCode = findInputForOutput(desiredOutput, puzzleInput);
+    System.out.printf("The desired 'noun * 100 + verb' code is: %s\n", nounVerbCode);
+  }
+
+  private static int findInputForOutput(int desiredOutput, int[] programMemory) {
+    for (int i = 0; i < 10000; i++) {
+      var noun = i / 100;
+      var verb = i % 100;
+      var memoryCopy = programMemory.clone();
+      setInputMemory(memoryCopy, noun, verb);
+      var resultMemory = executeIntCodeProgram(memoryCopy);
+      if (resultMemory[0] == desiredOutput) return i;
+    }
+    throw new RuntimeException("No noun/verb combination for the desired output was found.");
+  }
+
+  private static void setInputMemory(int[] programMemory, int noun, int verb) {
+    programMemory[1] = noun;
+    programMemory[2] = verb;
+  }
+
+  private static void puzzleOne(int[] puzzleInput) throws IOException {
     System.out.println("Day 2 : Puzzle 1");
-    var puzzleInput = readPuzzleInput(Paths.get("input.txt"));
     restore1202AlarmState(puzzleInput);
     var resultIntCodeState = executeIntCodeProgram(puzzleInput);
     var puzzleOneSolution = resultIntCodeState[0];
@@ -59,8 +84,6 @@ public class Day2 {
 
   private static int[] readPuzzleInput(Path path) throws IOException {
     var intCodeArray = Files.readString(path).split(",");
-    return Arrays.stream(intCodeArray)
-        .mapToInt(Integer::parseInt)
-        .toArray();
+    return Arrays.stream(intCodeArray).mapToInt(Integer::parseInt).toArray();
   }
 }
