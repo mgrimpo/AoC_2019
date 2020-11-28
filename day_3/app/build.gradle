@@ -11,6 +11,11 @@ plugins {
     id 'application'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
@@ -29,7 +34,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'de.mgrimpo.adventofcode.year2019.App'
+    mainClass = 'de.mgrimpo.adventofcode.year2019.Day3'
 }
 
 tasks.named('test') {

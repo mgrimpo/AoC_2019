@@ -3,12 +3,157 @@
  */
 package de.mgrimpo.adventofcode.year2019;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class Day3 {
-    public String getGreeting() {
-        return "Hello World!";
+
+  public static Set<Coordinate> parseWireDescription(String wireDescription) {
+    var wireInstructions = wireDescription.split(",");
+    Coordinate currentCoordinate = centralPort;
+    var wireCoordinates = new HashSet();
+    wireCoordinates.add(currentCoordinate);
+    for (var wireInstruction : wireInstructions) {
+      if (wireInstruction.length() < 2) {
+        throw new RuntimeException(
+            String.format(
+                "Invalid wire description, illegal instruction '%s' occurred", wireInstruction));
+      }
+      var direction = wireInstruction.charAt(0);
+      var distance = Integer.parseInt(wireInstruction.substring(1));
+      switch (direction) {
+        case 'U':
+          wireCoordinates.addAll(currentCoordinate.lineUp(distance));
+          currentCoordinate = currentCoordinate.up(distance);
+          break;
+        case 'D':
+          wireCoordinates.addAll(currentCoordinate.lineDown(distance));
+          currentCoordinate = currentCoordinate.down(distance);
+          break;
+        case 'L':
+          wireCoordinates.addAll(currentCoordinate.lineLeft(distance));
+          currentCoordinate = currentCoordinate.left(distance);
+          break;
+        case 'R':
+          wireCoordinates.addAll(currentCoordinate.lineRight(distance));
+          currentCoordinate = currentCoordinate.right(distance);
+          break;
+        default:
+          throw new RuntimeException(
+              String.format(
+                  "Invalid wire description, illegal instruction '%s' occurred", wireInstruction));
+      }
+    }
+    return wireCoordinates;
+  }
+
+  public static Set<Coordinate> wireIntersectionPoints(String wireOneDescription, String wireTwoDescription) {
+    var wireOne = parseWireDescription(wireOneDescription);
+    var wireTwo = parseWireDescription(wireTwoDescription);
+    wireOne.retainAll(wireTwo);
+    wireOne.remove(centralPort);
+    return wireOne;
+  }
+
+  static class Coordinate {
+    public final int x;
+    public final int y;
+
+    Coordinate(int x, int y) {
+      this.x = x;
+      this.y = y;
     }
 
-    public static void main(String[] args) {
-        System.out.println(new Day3().getGreeting());
+    public int manhattanDistance(Coordinate other) {
+      return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      Coordinate that = (Coordinate) o;
+      return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(x, y);
+    }
+
+    public Coordinate up(int distance) {
+      return new Coordinate(this.x, y + distance);
+    }
+
+    public Coordinate down(int distance) {
+      return new Coordinate(this.x, y - distance);
+    }
+
+    public Coordinate left(int distance) {
+      return new Coordinate(this.x - distance, y);
+    }
+
+    public Coordinate right(int distance) {
+      return new Coordinate(this.x + distance, y);
+    }
+
+    public Set<Coordinate> lineUp(int distance) {
+      return IntStream.rangeClosed(0, distance)
+          .mapToObj(this::up)
+          .collect(Collectors.toSet());
+    }
+    public Set<Coordinate> lineDown(int distance) {
+      return IntStream.rangeClosed(0, distance)
+          .mapToObj(this::down)
+          .collect(Collectors.toSet());
+    }
+    public Set<Coordinate> lineRight(int distance) {
+      return IntStream.rangeClosed(0, distance)
+          .mapToObj(this::right)
+          .collect(Collectors.toSet());
+    }
+    public Set<Coordinate> lineLeft(int distance) {
+      return IntStream.rangeClosed(0, distance)
+          .mapToObj(this::left)
+          .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toString() {
+      return "Coordinate{" + "x=" + x + ", y=" + y + '}';
+    }
+  }
+
+  private static final Coordinate centralPort = new Coordinate(0, 0);
+
+  public static int shortestDistanceToCentralPort(String wireOneDescription, String wireTwoDescription){
+    var intersectionPoints = wireIntersectionPoints(wireOneDescription, wireTwoDescription);
+    var closestIntersection = intersectionPoints.stream()
+        .reduce((a, b) -> a.manhattanDistance(centralPort) < b.manhattanDistance(centralPort) ? a : b)
+        .get();
+    return closestIntersection.manhattanDistance(centralPort);
+  }
+
+  public static void main(String[] args) throws IOException {
+    System.out.println("Day 3 : Puzzle 1");
+    var puzzleInput = readPuzzleInput();
+    var puzzleOneSolution = shortestDistanceToCentralPort(puzzleInput.get(0), puzzleInput.get(1));
+    System.out.printf("The shortest distance from an intersection point of the two wires to the central port is: %s\n", puzzleOneSolution);
+  }
+
+  private static List<String> readPuzzleInput() throws IOException {
+    return Files.readAllLines(Path.of("input.txt"));
+  }
 }
