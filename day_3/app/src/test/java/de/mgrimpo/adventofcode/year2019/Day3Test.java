@@ -5,22 +5,45 @@ package de.mgrimpo.adventofcode.year2019;
 
 import de.mgrimpo.adventofcode.year2019.Day3.Coordinate;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Day3Test {
 
+  private static final String[] EXAMPLE_INPUT_ONE =
+      "R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83".split("\n");
+  private static final String[] EXAMPLE_INPUT_TWO =
+      "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7".split("\n");
+
   @Test
   void exampleInputGivesCorrectDistance() {
-    var examplePuzzleInput1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83".split("\n");
     var exampleSolution1 = 159;
-    assertEquals(Day3.shortestDistanceToCentralPort(examplePuzzleInput1[0], examplePuzzleInput1[1]), exampleSolution1);
+    assertEquals(
+        Day3.shortestDistanceToCentralPort(EXAMPLE_INPUT_ONE[0], EXAMPLE_INPUT_ONE[1]),
+        exampleSolution1);
   }
 
   @Test
-  void testManhattenDistance(){
-    var a = new Coordinate(0,0);
-    var b = new Coordinate(3,3);
+  void testWireStepsToCoordinate(){
+    var wireDescription = "R8,U5,L5,D3";
+    var destinationCoordinate = new Coordinate(3,3);
+    var stepsToDestination = 20;
+    assertEquals(stepsToDestination, Day3.stepsToCoordinate(wireDescription, destinationCoordinate));
+  }
+
+  @Test
+  void exampleInputGivesCorrectSteps() {
+    var exampleOneSteps = 610;
+    assertEquals(exampleOneSteps, Day3.fewesteCombinedStepsToIntersection(EXAMPLE_INPUT_ONE[0], EXAMPLE_INPUT_ONE[1]));
+    var exampleTwoSteps = 410;
+    assertEquals(exampleTwoSteps, Day3.fewesteCombinedStepsToIntersection(EXAMPLE_INPUT_TWO[0], EXAMPLE_INPUT_TWO[1]));
+  }
+
+  @Test
+  void testManhattenDistance() {
+    var a = new Coordinate(0, 0);
+    var b = new Coordinate(3, 3);
     assertEquals(6, a.manhattanDistance(b));
   }
 
@@ -28,11 +51,10 @@ class Day3Test {
   void testWireIntersectionFinding() {
     var wireOneDescription = "R8,U5,L5,D3";
     var wireTwoDescription = "U7,R6,D4,L4";
-    var wireIntersectionPoints = Set.of(
-        new Coordinate(3, 3),
-        new Coordinate(6, 5)
-    );
-    assertEquals(wireIntersectionPoints, Day3.wireIntersectionPoints(wireOneDescription, wireTwoDescription));
+    var wireIntersectionPoints = Set.of(new Coordinate(3, 3), new Coordinate(6, 5));
+    assertEquals(
+        wireIntersectionPoints,
+        Day3.wireIntersectionPoints(wireOneDescription, wireTwoDescription));
   }
 
   @Test
