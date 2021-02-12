@@ -15,6 +15,8 @@ import java.util.stream.IntStream;
 
 public class Day3 {
 
+  private static final Coordinate CENTRAL_PORT = new Coordinate(0, 0);
+
   public static Set<Coordinate> parseWireDescription(String wireDescription) {
     var wireInstructions = wireDescription.split(",");
     Coordinate currentCoordinate = CENTRAL_PORT;
@@ -100,6 +102,45 @@ public class Day3 {
     return steps;
   }
 
+  public static int shortestDistanceToCentralPort(
+      String wireOneDescription, String wireTwoDescription) {
+    var intersectionPoints = wireIntersectionPoints(wireOneDescription, wireTwoDescription);
+    if (intersectionPoints.isEmpty()) throw new RuntimeException("Wires have no intersection points!");
+    var closestIntersection =
+        intersectionPoints.stream()
+            .reduce(
+                (a, b) ->
+                    a.manhattanDistance(CENTRAL_PORT) < b.manhattanDistance(CENTRAL_PORT) ? a : b)
+            .get();
+    return closestIntersection.manhattanDistance(CENTRAL_PORT);
+  }
+
+  public static void main(String[] args) throws IOException {
+    var puzzleInput = readPuzzleInput();
+    puzzleOne(puzzleInput);
+    puzzleTwo(puzzleInput);
+  }
+
+  private static void puzzleTwo(List<String> puzzleInput) {
+    System.out.println("Day 3 : Puzzle 1");
+    var puzzleTwoSolution =
+        fewesteCombinedStepsToIntersection(puzzleInput.get(0), puzzleInput.get(1));
+    System.out.printf(
+        "The fewest combined steps to an intersection of the wires are: %s\n", puzzleTwoSolution);
+  }
+
+  private static void puzzleOne(List<String> puzzleInput) {
+    System.out.println("Day 3 : Puzzle 2");
+    var puzzleOneSolution = shortestDistanceToCentralPort(puzzleInput.get(0), puzzleInput.get(1));
+    System.out.printf(
+        "The shortest distance from an intersection point of the two wires to the central port is: %s\n",
+        puzzleOneSolution);
+  }
+
+  private static List<String> readPuzzleInput() throws IOException {
+    return Files.readAllLines(Path.of("input.txt"));
+  }
+
   static class Coordinate {
     public final int x;
     public final int y;
@@ -130,82 +171,41 @@ public class Day3 {
       return Objects.hash(x, y);
     }
 
-    public Coordinate up(int distance) {
-      return new Coordinate(this.x, y + distance);
-    }
-
-    public Coordinate down(int distance) {
-      return new Coordinate(this.x, y - distance);
-    }
-
-    public Coordinate left(int distance) {
-      return new Coordinate(this.x - distance, y);
-    }
-
-    public Coordinate right(int distance) {
-      return new Coordinate(this.x + distance, y);
-    }
-
     public Set<Coordinate> lineUp(int distance) {
       return IntStream.rangeClosed(0, distance).mapToObj(this::up).collect(Collectors.toSet());
+    }
+
+    public Coordinate up(int distance) {
+      return new Coordinate(this.x, y + distance);
     }
 
     public Set<Coordinate> lineDown(int distance) {
       return IntStream.rangeClosed(0, distance).mapToObj(this::down).collect(Collectors.toSet());
     }
 
+    public Coordinate down(int distance) {
+      return new Coordinate(this.x, y - distance);
+    }
+
     public Set<Coordinate> lineRight(int distance) {
       return IntStream.rangeClosed(0, distance).mapToObj(this::right).collect(Collectors.toSet());
+    }
+
+    public Coordinate right(int distance) {
+      return new Coordinate(this.x + distance, y);
     }
 
     public Set<Coordinate> lineLeft(int distance) {
       return IntStream.rangeClosed(0, distance).mapToObj(this::left).collect(Collectors.toSet());
     }
 
+    public Coordinate left(int distance) {
+      return new Coordinate(this.x - distance, y);
+    }
+
     @Override
     public String toString() {
       return "Coordinate{" + "x=" + x + ", y=" + y + '}';
     }
-  }
-
-  private static final Coordinate CENTRAL_PORT = new Coordinate(0, 0);
-
-  public static int shortestDistanceToCentralPort(
-      String wireOneDescription, String wireTwoDescription) {
-    var intersectionPoints = wireIntersectionPoints(wireOneDescription, wireTwoDescription);
-    if (intersectionPoints.isEmpty()) throw new RuntimeException("Wires have no intersection points!");
-    var closestIntersection =
-        intersectionPoints.stream()
-            .reduce(
-                (a, b) ->
-                    a.manhattanDistance(CENTRAL_PORT) < b.manhattanDistance(CENTRAL_PORT) ? a : b)
-            .get();
-    return closestIntersection.manhattanDistance(CENTRAL_PORT);
-  }
-
-  public static void main(String[] args) throws IOException {
-    var puzzleInput = readPuzzleInput();
-    puzzleOne(puzzleInput);
-    puzzleTwo(puzzleInput);
-  }
-
-  private static void puzzleTwo(List<String> puzzleInput) {
-    System.out.println("Day 3 : Puzzle 1");
-    var puzzleTwoSolution =
-        fewesteCombinedStepsToIntersection(puzzleInput.get(0), puzzleInput.get(1));
-    System.out.printf(
-        "The fewest combined steps to an intersection of the wires are: %s\n", puzzleTwoSolution);
-  }
-
-  private static void puzzleOne(List<String> puzzleInput) {
-    System.out.println("Day 3 : Puzzle 1");
-    var puzzleOneSolution = shortestDistanceToCentralPort(puzzleInput.get(0), puzzleInput.get(1));
-    System.out.printf(
-        "The shortest distance from an intersection point of the two wires to the central port is: %s\n",
-        puzzleOneSolution);
-  }
-
-  private static List<String> readPuzzleInput() throws IOException {
-    return Files.readAllLines(Path.of("input.txt"));
   }
 }
