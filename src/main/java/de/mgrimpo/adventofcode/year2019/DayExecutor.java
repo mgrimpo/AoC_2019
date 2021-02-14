@@ -15,20 +15,24 @@ public class DayExecutor {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DayExecutor.class);
 
   public static void main(String[] args) {
-    final List<Class<? extends Day>> sortedClasses = findDayClasses().stream()
-        .sorted(Comparator.comparingInt(DayExecutor::getDayNumber))
-        .collect(Collectors.toList());
     printAdventOfCode2019Banner();
-    for (var dayClass : sortedClasses) {
+    for (var dayClass : loadDayClassesInRange(4, 25)) {
       try {
         Day day = dayClass.getDeclaredConstructor().newInstance();
         printSolutions(day);
       } catch (ReflectiveOperationException e) {
-        logger.error("%s could not be instantiated, no arg constructor seems to be missing",
+        logger.error("%s could not be instantiated",
             dayClass.getName());
         e.printStackTrace();
       }
     }
+  }
+
+  public static List<Class<? extends Day>> loadDayClassesInRange(int startingDay, int endDay) {
+    return findDayClasses().stream()
+        .filter(clazz -> getDayNumber(clazz) >= startingDay && getDayNumber(clazz) <= endDay)
+        .sorted(Comparator.comparingInt(DayExecutor::getDayNumber))
+        .collect(Collectors.toList());
   }
 
   private static void printAdventOfCode2019Banner() {
