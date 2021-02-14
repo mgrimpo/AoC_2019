@@ -4,7 +4,7 @@ public class InstructionFactory {
   private InstructionFactory() {}
 
   public static IntCodeInstruction createInstruction(int[] programMemory, int instructionPointer) {
-    var opCode = programMemory[instructionPointer];
+    var opCode = programMemory[instructionPointer] % 100;
     if (opCode == 1 || opCode == 2) {
       return new ArithmeticInstruction(programMemory, instructionPointer);
     } else if (opCode == 99) {

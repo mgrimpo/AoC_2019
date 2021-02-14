@@ -4,15 +4,15 @@ import java.util.Optional;
 
 class ArithmeticInstruction extends IntCodeInstruction {
 
-  private final int firstOperandAddress;
-  private final int secondOperandAddress;
-  private final int resultAddress;
+  private final int firstParameter;
+  private final int secondParameter;
+  private final int thirdParameter;
 
   ArithmeticInstruction(int[] programMemory, int instructionPointer) {
     super(programMemory, instructionPointer);
-    firstOperandAddress = programMemory[instructionPointer + 1];
-    secondOperandAddress = programMemory[instructionPointer + 2];
-    resultAddress = programMemory[instructionPointer + 3];
+    firstParameter = programMemory[instructionPointer + 1];
+    secondParameter = programMemory[instructionPointer + 2];
+    thirdParameter = programMemory[instructionPointer + 3];
   }
 
   @Override
@@ -20,15 +20,31 @@ class ArithmeticInstruction extends IntCodeInstruction {
     int result;
     switch (opCode) {
       case 1:
-        result = programMemory[firstOperandAddress] + programMemory[secondOperandAddress];
+        result = add(programMemory);
         break;
       case 2:
-        result = programMemory[firstOperandAddress] * programMemory[secondOperandAddress];
+        result = multiply(programMemory);
         break;
       default:
         throw new RuntimeException("Encountered unimplemented op code");
     }
-    programMemory[resultAddress] = result;
+    programMemory[thirdParameter] = result;
     return Optional.of(result);
+  }
+
+  private int multiply(int[] programMemory) {
+    int result;
+    result =
+        getParameterValue(firstParameterMode, firstParameter, programMemory) * getParameterValue(
+            secondParameterMode, secondParameter,
+            programMemory);
+    return result;
+  }
+
+  private int add(int[] programMemory) {
+    int result;
+    result = getParameterValue(firstParameterMode, firstParameter, programMemory)
+        + getParameterValue(secondParameterMode, secondParameter, programMemory);
+    return result;
   }
 }

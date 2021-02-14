@@ -1,10 +1,12 @@
 package de.mgrimpo.adventofcode.year2019;
 
 import de.mgrimpo.adventofcode.year2019.days.Day;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.reflections.Reflections;
 import org.reflections.ReflectionsException;
@@ -15,8 +17,13 @@ public class DayExecutor {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DayExecutor.class);
 
   public static void main(String[] args) {
+    final int[] classesToLoad = new int[]{2, 5};
+    executeAndPrintSolutions(classesToLoad);
+  }
+
+  private static void executeAndPrintSolutions(int[] classesToLoad) {
     printAdventOfCode2019Banner();
-    for (var dayClass : loadDayClassesInRange(2, 2)) {
+    for (var dayClass : loadDayClasses(classesToLoad)) {
       try {
         Day day = dayClass.getDeclaredConstructor().newInstance();
         printSolutions(day);
@@ -28,9 +35,10 @@ public class DayExecutor {
     }
   }
 
-  public static List<Class<? extends Day>> loadDayClassesInRange(int startingDay, int endDay) {
+  private static List<Class<? extends Day>> loadDayClasses(int[] classesToLoad) {
+    Predicate<Integer> isInClassesToLoad = i -> Arrays.stream(classesToLoad).anyMatch(i::equals);
     return findDayClasses().stream()
-        .filter(clazz -> getDayNumber(clazz) >= startingDay && getDayNumber(clazz) <= endDay)
+        .filter(clazz ->  isInClassesToLoad.test(getDayNumber(clazz)))
         .sorted(Comparator.comparingInt(DayExecutor::getDayNumber))
         .collect(Collectors.toList());
   }
