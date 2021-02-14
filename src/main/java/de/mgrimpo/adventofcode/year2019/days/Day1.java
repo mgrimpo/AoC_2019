@@ -7,15 +7,15 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Day1 {
+public class Day1 implements Day{
 
-  public static void main(String[] args) throws IOException {
+  private final List<Long> moduleMasses;
+
+  public Day1() throws IOException {
     Path inputFile = Paths.get("input/day1_input.txt");
-    List<Long> moduleMasses = readModuleMasses(inputFile);
-    long puzzleOneResult = netFuelRequiredForModules(moduleMasses);
-    System.out.printf("The net fuel requirements for all modules are: %s\n",  puzzleOneResult);
-    long puzzleTwoResult = totalFuelRequiredForModules(moduleMasses);
-    System.out.printf("The overall fuel requirements, including fuel for fuel mass, are: %s\n",  puzzleTwoResult);
+     moduleMasses = readModuleMasses(inputFile);
+  }
+  public static void main(String[] args) throws IOException {
   }
 
   private static long fuelForFuelMass(long fuelMass) {
@@ -49,5 +49,17 @@ public class Day1 {
 
   private static List<Long> readModuleMasses(Path statsPath) throws IOException {
     return Files.lines(statsPath).map(Long::parseLong).collect(Collectors.toList());
+  }
+
+  @Override
+  public String puzzleOneSolution() {
+    long puzzleOneResult = netFuelRequiredForModules(moduleMasses);
+    return String.format("The net fuel requirements for all modules are: %s",  puzzleOneResult);
+  }
+
+  @Override
+  public String puzzleTwoSolution() {
+    long puzzleTwoResult = totalFuelRequiredForModules(moduleMasses);
+    return String.format("The overall fuel requirements, including fuel for fuel mass, are: %s",  puzzleTwoResult);
   }
 }
