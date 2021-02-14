@@ -16,7 +16,7 @@ public class DayExecutor {
 
   public static void main(String[] args) {
     printAdventOfCode2019Banner();
-    for (var dayClass : loadDayClassesInRange(4, 25)) {
+    for (var dayClass : loadDayClassesInRange(2, 2)) {
       try {
         Day day = dayClass.getDeclaredConstructor().newInstance();
         printSolutions(day);
