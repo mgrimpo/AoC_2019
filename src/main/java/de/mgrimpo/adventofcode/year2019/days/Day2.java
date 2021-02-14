@@ -3,6 +3,7 @@
  */
 package de.mgrimpo.adventofcode.year2019.days;
 
+
 import de.mgrimpo.adventofcode.year2019.intcodemachine.HaltingInstruction;
 import de.mgrimpo.adventofcode.year2019.intcodemachine.InstructionFactory;
 import java.io.IOException;
@@ -11,7 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class Day2 {
+public class Day2 implements Day {
+
+  private final int[] puzzleInput;
 
   public static int[] executeIntCodeProgram(int[] programMemory) {
     programMemory = programMemory.clone();
@@ -26,17 +29,15 @@ public class Day2 {
   }
 
 
-  public static void main(String[] args) throws IOException {
-    var puzzleInput = readPuzzleInput(Paths.get("input/day2_input.txt"));
-    puzzleOne(puzzleInput);
-    puzzleTwo(puzzleInput);
+  public Day2() throws IOException {
+    puzzleInput = readPuzzleInput(Paths.get("input/day2_input.txt"));
   }
 
-  private static void puzzleTwo(int[] puzzleInput) {
-    System.out.println("Day 2 : Puzzle 2");
+  @Override
+  public String puzzleTwoSolution() {
     final var desiredOutput = 19690720;
     final var nounVerbCode = findInputForOutput(desiredOutput, puzzleInput);
-    System.out.printf("The desired 'noun * 100 + verb' code is: %s\n", nounVerbCode);
+    return String.format("The desired 'noun * 100 + verb' code is: %s", nounVerbCode);
   }
 
   private static int findInputForOutput(int desiredOutput, int[] programMemory) {
@@ -56,12 +57,11 @@ public class Day2 {
     programMemory[2] = verb;
   }
 
-  private static void puzzleOne(int[] puzzleInput) throws IOException {
-    System.out.println("Day 2 : Puzzle 1");
+  public String puzzleOneSolution() {
     restore1202AlarmState(puzzleInput);
     var resultIntCodeState = executeIntCodeProgram(puzzleInput);
     var puzzleOneSolution = resultIntCodeState[0];
-    System.out.printf("The value at position 0 is: %s\n", puzzleOneSolution);
+    return String.format("The value at position 0 is: %s", puzzleOneSolution);
   }
 
   private static void restore1202AlarmState(int[] programMemory) {

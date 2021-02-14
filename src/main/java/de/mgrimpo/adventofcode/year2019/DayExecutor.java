@@ -1,8 +1,11 @@
 package de.mgrimpo.adventofcode.year2019;
 
 import de.mgrimpo.adventofcode.year2019.days.Day;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.reflections.Reflections;
 import org.reflections.ReflectionsException;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,11 @@ public class DayExecutor {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DayExecutor.class);
 
   public static void main(String[] args) {
-    for (var dayClass : findDayClasses()) {
+    final List<Class<? extends Day>> sortedClasses = findDayClasses().stream()
+        .sorted(Comparator.comparingInt(DayExecutor::getDayNumber))
+        .collect(Collectors.toList());
+    printAdventOfCode2019Banner();
+    for (var dayClass : sortedClasses) {
       try {
         Day day = dayClass.getDeclaredConstructor().newInstance();
         printSolutions(day);
@@ -24,10 +31,13 @@ public class DayExecutor {
     }
   }
 
-  private static void printSolutions(Day day) {
-    var dayNumber = getDayNumber(day.getClass());
+  private static void printAdventOfCode2019Banner() {
     System.out.println();
     System.out.println("#".repeat(12) + "  Advent of Code 2019  " + "#".repeat(12));
+  }
+
+  private static void printSolutions(Day day) {
+    var dayNumber = getDayNumber(day.getClass());
     System.out.printf("Day %s, Puzzle 1:\n%s\n", dayNumber, day.puzzleOneSolution());
     System.out.printf("Day %s, Puzzle 2:\n%s\n", dayNumber, day.puzzleTwoSolution());
     System.out.println();
