@@ -2,19 +2,11 @@ package de.mgrimpo.adventofcode.year2019.days;
 
 import java.util.function.Predicate;
 
-public class Day4 {
+public class Day4 implements Day {
 
   static int[] puzzleInput = new int[]{153517, 630395};
 
   public static void main(String[] args) {
-    int solutionPuzzle1 = solveDay4(puzzleInput, Day4::containsNeighboringPair);
-    System.out.printf(
-        "Puzzle 1: There are %d possible passwords for the range of %d-%d\n",
-        solutionPuzzle1, puzzleInput[0], puzzleInput[1]);
-    int solutionPuzzle2 = solveDay4(puzzleInput, Day4::containsIsolatedPair);
-    System.out.printf(
-        "Puzzle 2: There are %d possible passwords for the range of %d-%d\n",
-        solutionPuzzle2, puzzleInput[0], puzzleInput[1]);
   }
 
   static int solveDay4(int[] puzzleInputDay1, Predicate<Integer> neighborRule) {
@@ -76,8 +68,8 @@ public class Day4 {
   }
 
   /**
-   * Checks whether {@code passwordCandidate} has two adjacent matching digits, where the two adjacent
-   * matching digits are not part of a larger group of matching digits.
+   * Checks whether {@code passwordCandidate} has two adjacent matching digits, where the two
+   * adjacent matching digits are not part of a larger group of matching digits.
    *
    * @param passwordCandidate
    */
@@ -97,5 +89,21 @@ public class Day4 {
       return true;
     }
     return isolatedPairHelper(passwordCandidate.substring((int) sameCharacterStreakLength));
+  }
+
+  @Override
+  public String puzzleOneSolution() {
+    int solutionPuzzle1 = solveDay4(puzzleInput, Day4::containsNeighboringPair);
+    return String.format(
+        "There are %d possible passwords for the range of %d-%d.",
+        solutionPuzzle1, puzzleInput[0], puzzleInput[1]);
+  }
+
+  @Override
+  public String puzzleTwoSolution() {
+    int solutionPuzzle2 = solveDay4(puzzleInput, Day4::containsIsolatedPair);
+    return String.format(
+        "There are %d possible passwords for the range of %d-%d, when the adjacent pair can not be part of a larger group of matching digits.",
+        solutionPuzzle2, puzzleInput[0], puzzleInput[1]);
   }
 }

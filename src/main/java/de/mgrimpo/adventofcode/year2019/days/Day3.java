@@ -13,9 +13,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Day3 {
+public class Day3 implements Day{
 
   private static final Coordinate CENTRAL_PORT = new Coordinate(0, 0);
+  private final List<String> puzzleInput;
+
+  public Day3() throws IOException {
+    puzzleInput = readPuzzleInput();
+  }
 
   public static Set<Coordinate> parseWireDescription(String wireDescription) {
     var wireInstructions = wireDescription.split(",");
@@ -115,30 +120,24 @@ public class Day3 {
     return closestIntersection.manhattanDistance(CENTRAL_PORT);
   }
 
-  public static void main(String[] args) throws IOException {
-    var puzzleInput = readPuzzleInput();
-    puzzleOne(puzzleInput);
-    puzzleTwo(puzzleInput);
+  private static List<String> readPuzzleInput() throws IOException {
+    return Files.readAllLines(Path.of("input/day3_input.txt"));
   }
 
-  private static void puzzleTwo(List<String> puzzleInput) {
-    System.out.println("Day 3 : Puzzle 1");
-    var puzzleTwoSolution =
-        fewesteCombinedStepsToIntersection(puzzleInput.get(0), puzzleInput.get(1));
-    System.out.printf(
-        "The fewest combined steps to an intersection of the wires are: %s\n", puzzleTwoSolution);
-  }
-
-  private static void puzzleOne(List<String> puzzleInput) {
-    System.out.println("Day 3 : Puzzle 2");
+  @Override
+  public String puzzleOneSolution() {
     var puzzleOneSolution = shortestDistanceToCentralPort(puzzleInput.get(0), puzzleInput.get(1));
-    System.out.printf(
-        "The shortest distance from an intersection point of the two wires to the central port is: %s\n",
+    return String.format(
+        "The shortest distance from an intersection point of the two wires to the central port is: %s",
         puzzleOneSolution);
   }
 
-  private static List<String> readPuzzleInput() throws IOException {
-    return Files.readAllLines(Path.of("input/day3_input.txt"));
+  @Override
+  public String puzzleTwoSolution() {
+    var puzzleTwoSolution =
+        fewesteCombinedStepsToIntersection(puzzleInput.get(0), puzzleInput.get(1));
+    return String.format(
+        "The fewest combined steps to an intersection of the wires are: %s", puzzleTwoSolution);
   }
 
   static class Coordinate {
