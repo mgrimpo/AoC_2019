@@ -18,6 +18,8 @@ public class EqualsInstruction extends IntCodeInstruction {
     if (parameters.get(0).interpretParameterValue(programMemory) ==
         parameters.get(1).interpretParameterValue(programMemory)) {
       programMemory[parameters.get(2).getUninterpretedParameterValue()] = 1;
+    } else {
+      programMemory[parameters.get(2).getUninterpretedParameterValue()] = 0;
     }
     return Optional.empty();
   }

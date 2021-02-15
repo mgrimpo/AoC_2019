@@ -7,21 +7,25 @@ import java.nio.file.Path;
 
 public class Day5 implements Day {
 
+  private final String input;
+
+  public Day5() throws IOException {
+    this.input = Files.readString(Path.of("input/day5_input.txt"));
+  }
+
   @Override
   public String puzzleOneSolution() {
-    try {
-      IntCodeProgram day5Program = IntCodeProgram.fromString(
-          Files.readString(Path.of("input/day5_input.txt")));
-      System.out.println("Executing Day5, please input 1 at the next prompt.");
-      day5Program.execute();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    IntCodeProgram day5Program = IntCodeProgram.fromString(input);
+    System.out.println("Executing Day5, Puzzle 1, please input 1 at the next prompt.");
+    day5Program.execute();
     return "Solution is outputted above.";
   }
 
   @Override
   public String puzzleTwoSolution() {
-    return "NOT YET SOLVED!";
+    IntCodeProgram day5Program = IntCodeProgram.fromString(input);
+    System.out.println("Executing Day5, Puzzle 2, please input 5 at the next prompt.");
+    day5Program.execute();
+    return "Solution is outputted above.";
   }
 }

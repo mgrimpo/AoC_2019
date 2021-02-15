@@ -1,5 +1,8 @@
 package de.mgrimpo.adventofcode.year2019.intcodemachine;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 public class IntCodeProgram implements Cloneable {
@@ -25,10 +28,25 @@ public class IntCodeProgram implements Cloneable {
       if (instruction instanceof HaltingInstruction) {
         break;
       }
-      instruction.execute(operatingMemory);
-      instructionPointer += instruction.length();
+      var newInstructionPointer = instruction.execute(operatingMemory);
+      instructionPointer = newInstructionPointer
+          .orElse(instructionPointer + instruction.length());
     }
     return new IntCodeProgram(operatingMemory);
+  }
+
+  public String executeWithPresetInput(String input) {
+    var in = new ByteArrayInputStream(input.getBytes());
+    var originalOut = System.out;
+    var originalIn = System.in;
+    var outByteStream = new ByteArrayOutputStream();
+    var out = new PrintStream(outByteStream);
+    System.setIn(in);
+    System.setOut(out);
+    this.execute();
+    System.setOut(originalOut);
+    System.setIn(originalIn);
+    return outByteStream.toString();
   }
 
   public int valueAt(int index) {
