@@ -17,7 +17,9 @@ public class DayExecutor {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DayExecutor.class);
 
   public static void main(String[] args) {
-    final int[] classesToLoad = new int[]{5};
+    final int[] classesToLoad = new int[]{
+        5
+    };
     executeAndPrintSolutions(classesToLoad);
   }
 
@@ -38,7 +40,7 @@ public class DayExecutor {
   private static List<Class<? extends Day>> loadDayClasses(int[] classesToLoad) {
     Predicate<Integer> isInClassesToLoad = i -> Arrays.stream(classesToLoad).anyMatch(i::equals);
     return findDayClasses().stream()
-        .filter(clazz ->  isInClassesToLoad.test(getDayNumber(clazz)))
+        .filter(clazz -> isInClassesToLoad.test(getDayNumber(clazz)))
         .sorted(Comparator.comparingInt(DayExecutor::getDayNumber))
         .collect(Collectors.toList());
   }
