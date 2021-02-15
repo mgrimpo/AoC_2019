@@ -33,5 +33,12 @@ public abstract class IntCodeInstruction {
     return parameters;
   }
 
+  /**
+   * Execute the instruction possibly altering the {@code programMemory} in the process
+   *
+   * @param programMemory the memory the instruction operates on
+   * @return the new value for the instruction counter if the instruction modifies the instruction
+   * counter, else Optional.empty()
+   */
   abstract public Optional<Integer> execute(int[] programMemory);
 }

@@ -2,7 +2,7 @@ package de.mgrimpo.adventofcode.year2019.intcodemachine;
 
 import java.util.Arrays;
 
-public class IntCodeProgram implements Cloneable{
+public class IntCodeProgram implements Cloneable {
 
   private final int[] programMemory;
 
@@ -53,6 +53,6 @@ public class IntCodeProgram implements Cloneable{
   }
 
   public IntCodeProgram clone() {
-   return new IntCodeProgram(this.programMemory.clone());
+    return new IntCodeProgram(this.programMemory.clone());
   }
 }

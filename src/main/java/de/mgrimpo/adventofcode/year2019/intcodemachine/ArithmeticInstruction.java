@@ -28,7 +28,7 @@ class ArithmeticInstruction extends IntCodeInstruction {
         throw new RuntimeException("Encountered unimplemented op code");
     }
     programMemory[parameters.get(2).getUninterpretedParameterValue()] = result;
-    return Optional.of(result);
+    return Optional.empty();
   }
 
   private int multiply(int[] programMemory) {
