@@ -9,6 +9,11 @@ public class HaltingInstruction extends IntCodeInstruction {
   }
 
   @Override
+  protected int numberOfParameters() {
+    return 0;
+  }
+
+  @Override
   public Optional<Integer> execute(int[] programMemory) {
     return Optional.empty();
   }

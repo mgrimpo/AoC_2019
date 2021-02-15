@@ -1,36 +1,36 @@
 package de.mgrimpo.adventofcode.year2019.intcodemachine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class IntCodeInstruction {
 
   protected final int opCode;
-  protected final ParameterMode firstParameterMode;
-  protected final ParameterMode secondParameterMode;
-  protected final ParameterMode thirdParameterMode;
+  protected List<Parameter> parameters;
 
   IntCodeInstruction(int[] programMemory, int instructionPointer) {
     int instruction = programMemory[instructionPointer];
     this.opCode = instruction % 100;
-    firstParameterMode = ParameterMode.fromInt(findNthDigit(instruction, 2));
-    secondParameterMode = ParameterMode.fromInt(findNthDigit(instruction, 3));
-    thirdParameterMode = ParameterMode.fromInt(findNthDigit(instruction, 4));
+    parameters = readParameters(numberOfParameters(), instructionPointer, programMemory);
+  }
 
+  protected abstract int numberOfParameters();
+
+  public int length() {
+    return numberOfParameters() + 1;
   }
-  protected  int getParameterValue(ParameterMode mode, int parameter, int[] programMemory){
-    if (mode == ParameterMode.IMMEDIATE_MODE){
-      return parameter;
+
+  private static List<Parameter> readParameters(int numberOfParameters, int instructionPointer,
+      int[] programMemory) {
+    var parameters = new ArrayList<Parameter>();
+    for (int i = 1; i <= numberOfParameters; i++) {
+      parameters.add(
+          new Parameter(programMemory[instructionPointer + i],
+              ParameterMode.fromInstruction(programMemory[instructionPointer], i))
+      );
     }
-    else if (mode == ParameterMode.POSITION_MODE){
-      return programMemory[parameter];
-    }
-    throw new RuntimeException("Unknown Parameter mode: " + mode.toString());
-  }
-  // digit position counted from right to left
-  private static int findNthDigit(int number, int digitPosition) {
-    return (int) (
-        (number % Math.pow(10d, digitPosition + 1) - number % Math.pow(10, digitPosition))
-            / Math.pow(10, digitPosition));
+    return parameters;
   }
 
   abstract public Optional<Integer> execute(int[] programMemory);

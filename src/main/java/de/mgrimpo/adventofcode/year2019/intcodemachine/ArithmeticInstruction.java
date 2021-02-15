@@ -4,15 +4,14 @@ import java.util.Optional;
 
 class ArithmeticInstruction extends IntCodeInstruction {
 
-  private final int firstParameter;
-  private final int secondParameter;
-  private final int thirdParameter;
 
   ArithmeticInstruction(int[] programMemory, int instructionPointer) {
     super(programMemory, instructionPointer);
-    firstParameter = programMemory[instructionPointer + 1];
-    secondParameter = programMemory[instructionPointer + 2];
-    thirdParameter = programMemory[instructionPointer + 3];
+  }
+
+  @Override
+  protected int numberOfParameters() {
+    return 3;
   }
 
   @Override
@@ -28,23 +27,17 @@ class ArithmeticInstruction extends IntCodeInstruction {
       default:
         throw new RuntimeException("Encountered unimplemented op code");
     }
-    programMemory[thirdParameter] = result;
+    programMemory[parameters.get(2).getUninterpretedParameterValue()] = result;
     return Optional.of(result);
   }
 
   private int multiply(int[] programMemory) {
-    int result;
-    result =
-        getParameterValue(firstParameterMode, firstParameter, programMemory) * getParameterValue(
-            secondParameterMode, secondParameter,
-            programMemory);
-    return result;
+    return parameters.get(0).interpretParameterValue(programMemory) *
+        parameters.get(1).interpretParameterValue(programMemory);
   }
 
   private int add(int[] programMemory) {
-    int result;
-    result = getParameterValue(firstParameterMode, firstParameter, programMemory)
-        + getParameterValue(secondParameterMode, secondParameter, programMemory);
-    return result;
+    return parameters.get(0).interpretParameterValue(programMemory) +
+        parameters.get(1).interpretParameterValue(programMemory);
   }
 }

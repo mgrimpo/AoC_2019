@@ -15,14 +15,23 @@ public enum ParameterMode {
   }
 
   public static ParameterMode fromInt(int modeCode) {
-    if(modeCode == POSITION_MODE.getModeCode()){
+    if (modeCode == POSITION_MODE.getModeCode()) {
       return POSITION_MODE;
-    }
-    else if (modeCode == IMMEDIATE_MODE.getModeCode()){
+    } else if (modeCode == IMMEDIATE_MODE.getModeCode()) {
       return IMMEDIATE_MODE;
-    }
-    else {
+    } else {
       throw new RuntimeException("Unknown mode code");
     }
+  }
+
+  public static ParameterMode fromInstruction(int instruction, int parameterNumber) {
+    return ParameterMode.fromInt(findNthDigit(instruction, 1 + parameterNumber));
+  }
+
+  // digit position counted from right to left, starting at 0
+  private static int findNthDigit(int number, int digitPosition) {
+    return (int) (
+        (number % Math.pow(10d, digitPosition + 1) - number % Math.pow(10, digitPosition))
+            / Math.pow(10, digitPosition));
   }
 }
