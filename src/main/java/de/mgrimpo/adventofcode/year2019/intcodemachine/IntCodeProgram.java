@@ -11,7 +11,7 @@ public class IntCodeProgram implements Cloneable{
   }
 
   public static IntCodeProgram fromString(String programString) {
-    var intCodeArray = programString.split(",");
+    var intCodeArray = programString.trim().split(",");
     return new IntCodeProgram(Arrays.stream(intCodeArray)
         .mapToInt(Integer::parseInt)
         .toArray());
@@ -19,12 +19,14 @@ public class IntCodeProgram implements Cloneable{
 
   public IntCodeProgram execute() {
     var operatingMemory = programMemory.clone();
-    for (int instructionPointer = 0; instructionPointer < operatingMemory.length; instructionPointer += 4) {
-      var instruction = InstructionFactory.createInstruction(operatingMemory,instructionPointer);
+    int instructionPointer = 0;
+    while (instructionPointer < operatingMemory.length) {
+      var instruction = InstructionFactory.createInstruction(operatingMemory, instructionPointer);
       if (instruction instanceof HaltingInstruction) {
         break;
       }
       instruction.execute(operatingMemory);
+      instructionPointer += instruction.length();
     }
     return new IntCodeProgram(operatingMemory);
   }

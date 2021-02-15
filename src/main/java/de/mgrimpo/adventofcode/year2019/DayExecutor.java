@@ -17,7 +17,7 @@ public class DayExecutor {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DayExecutor.class);
 
   public static void main(String[] args) {
-    final int[] classesToLoad = new int[]{2, 5};
+    final int[] classesToLoad = new int[]{5};
     executeAndPrintSolutions(classesToLoad);
   }
 
