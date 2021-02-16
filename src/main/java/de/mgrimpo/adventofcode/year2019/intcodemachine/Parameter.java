@@ -2,24 +2,25 @@ package de.mgrimpo.adventofcode.year2019.intcodemachine;
 
 public class Parameter {
 
-  private final int parameterValue;
-  private final ParameterMode parameterMode;
+  private final int value;
+  private final ParameterMode mode;
 
-  public Parameter(int parameterValue,
-      ParameterMode parameterMode) {
-    this.parameterValue = parameterValue;
-    this.parameterMode = parameterMode;
+  public Parameter(int value,
+      ParameterMode mode) {
+    this.value = value;
+    this.mode = mode;
   }
-  public int getUninterpretedParameterValue(){
-    return parameterValue;
+
+  public int uninterpretedValue() {
+    return value;
   }
-  public  int interpretParameterValue(int[] programMemory){
-    if (parameterMode == ParameterMode.IMMEDIATE_MODE){
-      return parameterValue;
+
+  public int interpret(int[] programMemory) {
+    if (mode == ParameterMode.IMMEDIATE_MODE) {
+      return value;
+    } else if (mode == ParameterMode.POSITION_MODE) {
+      return programMemory[value];
     }
-    else if (parameterMode == ParameterMode.POSITION_MODE){
-      return programMemory[parameterValue];
-    }
-    throw new RuntimeException("Unknown Parameter mode: " + parameterMode.toString());
+    throw new RuntimeException("Unknown Parameter mode: " + mode.toString());
   }
 }

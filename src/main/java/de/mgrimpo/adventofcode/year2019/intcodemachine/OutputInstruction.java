@@ -15,7 +15,7 @@ public class OutputInstruction extends IntCodeInstruction{
 
   @Override
   public Optional<Integer> execute(int[] programMemory) {
-    var outputValue = programMemory[parameters.get(0).getUninterpretedParameterValue()];
+    var outputValue = programMemory[parameters.get(0).uninterpretedValue()];
     System.out.printf("Encountered an OutputInstruction. The output is: %s\n", outputValue);
     return Optional.empty();
   }

@@ -15,9 +15,9 @@ public class JumpIfFalseInstruction extends IntCodeInstruction{
 
   @Override
   public Optional<Integer> execute(int[] programMemory) {
-    if (parameters.get(0).interpretParameterValue(programMemory) == 0){
+    if (parameters.get(0).interpret(programMemory) == 0) {
       return Optional.of(
-          parameters.get(1).interpretParameterValue(programMemory)
+          parameters.get(1).interpret(programMemory)
       );
     }
     return Optional.empty();

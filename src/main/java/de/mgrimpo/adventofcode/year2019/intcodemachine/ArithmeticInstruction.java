@@ -27,17 +27,17 @@ class ArithmeticInstruction extends IntCodeInstruction {
       default:
         throw new RuntimeException("Encountered unimplemented op code");
     }
-    programMemory[parameters.get(2).getUninterpretedParameterValue()] = result;
+    writeToAddressInParameter(2, result, programMemory);
     return Optional.empty();
   }
 
   private int multiply(int[] programMemory) {
-    return parameters.get(0).interpretParameterValue(programMemory) *
-        parameters.get(1).interpretParameterValue(programMemory);
+    return parameters.get(0).interpret(programMemory) *
+        parameters.get(1).interpret(programMemory);
   }
 
   private int add(int[] programMemory) {
-    return parameters.get(0).interpretParameterValue(programMemory) +
-        parameters.get(1).interpretParameterValue(programMemory);
+    return parameters.get(0).interpret(programMemory) +
+        parameters.get(1).interpret(programMemory);
   }
 }

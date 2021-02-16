@@ -15,11 +15,11 @@ public class EqualsInstruction extends IntCodeInstruction {
 
   @Override
   public Optional<Integer> execute(int[] programMemory) {
-    if (parameters.get(0).interpretParameterValue(programMemory) ==
-        parameters.get(1).interpretParameterValue(programMemory)) {
-      programMemory[parameters.get(2).getUninterpretedParameterValue()] = 1;
+    if (parameters.get(0).interpret(programMemory) ==
+        parameters.get(1).interpret(programMemory)) {
+      writeToAddressInParameter(2, 1, programMemory);
     } else {
-      programMemory[parameters.get(2).getUninterpretedParameterValue()] = 0;
+      writeToAddressInParameter(2, 0, programMemory);
     }
     return Optional.empty();
   }

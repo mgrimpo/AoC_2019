@@ -41,4 +41,9 @@ public abstract class IntCodeInstruction {
    * counter, else Optional.empty()
    */
   abstract public Optional<Integer> execute(int[] programMemory);
+
+  protected void writeToAddressInParameter(int parameterIndex, int valueToWrite,
+      int[] programMemory) {
+    programMemory[parameters.get(parameterIndex).uninterpretedValue()] = valueToWrite;
+  }
 }
