@@ -2,8 +2,12 @@ package de.mgrimpo.adventofcode.year2019.days;
 
 public interface Day {
 
-  String puzzleOneSolution();
+  default String puzzleOneSolution() {
+    return "NOT YET SOLVED!";
+  }
 
-  String puzzleTwoSolution();
+  default String puzzleTwoSolution() {
+    return "NOT YET SOLVED!";
+  }
 
 }
