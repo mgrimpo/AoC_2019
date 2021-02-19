@@ -7,22 +7,22 @@ package de.mgrimpo.adventofcode.year2019.days;
 import de.mgrimpo.adventofcode.year2019.intcodemachine.IntCodeProgram;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Day2 implements Day {
 
-  private final IntCodeProgram puzzleInput;
+  private final String puzzleInput;
 
 
   public Day2() throws IOException {
-    puzzleInput = readPuzzleInput(Paths.get("input/day2_input.txt"));
+    puzzleInput = Files.readString(Paths.get("input/day2_input.txt"));
   }
 
   @Override
   public String puzzleTwoSolution() {
     final var desiredOutput = 19690720;
-    final var nounVerbCode = findInputForOutput(desiredOutput, puzzleInput);
+    var program = IntCodeProgram.fromString(puzzleInput);
+    final var nounVerbCode = findInputForOutput(desiredOutput, program);
     return String.format("The desired 'noun * 100 + verb' code is: %s", nounVerbCode);
   }
 
@@ -32,8 +32,8 @@ public class Day2 implements Day {
       var verb = nounVerbCode % 100;
       var programCopy = programMemory.clone();
       setVerbNounInput(programCopy, noun, verb);
-      var resultMemory = programCopy.execute();
-      if (resultMemory.valueAt(0 )== desiredOutput) return nounVerbCode;
+      programCopy.execute();
+      if (programCopy.valueAt(0) == desiredOutput) return nounVerbCode;
     }
     throw new RuntimeException("No noun/verb combination for the desired output was found.");
   }
@@ -44,19 +44,15 @@ public class Day2 implements Day {
   }
 
   public String puzzleOneSolution() {
-    restore1202AlarmState(puzzleInput);
-    var resultIntCodeState = puzzleInput.execute();
-    var puzzleOneSolution = resultIntCodeState.valueAt(0);
+    var program = IntCodeProgram.fromString(puzzleInput);
+    restore1202AlarmState(program);
+    program.execute();
+    var puzzleOneSolution = program.valueAt(0);
     return String.format("The value at position 0 is: %s", puzzleOneSolution);
   }
 
   private static void restore1202AlarmState(IntCodeProgram program) {
     setVerbNounInput(program, 12, 02);
-  }
-
-  private static IntCodeProgram readPuzzleInput(Path path) throws IOException {
-    String fileContents = Files.readString(path);
-    return IntCodeProgram.fromString(fileContents);
   }
 
 }

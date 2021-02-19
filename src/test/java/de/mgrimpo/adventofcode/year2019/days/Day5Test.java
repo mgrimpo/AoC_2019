@@ -10,7 +10,8 @@ public class Day5Test {
   @Test public void testExampleProgram(){
     var exampleProgramString = "1002,4,3,4,33";
     var intCodeProgram = IntCodeProgram.fromString(exampleProgramString);
-    assertEquals(99, intCodeProgram.execute().valueAt(4));
+    intCodeProgram.execute();
+    assertEquals(99, intCodeProgram.valueAt(4));
   }
 
 
