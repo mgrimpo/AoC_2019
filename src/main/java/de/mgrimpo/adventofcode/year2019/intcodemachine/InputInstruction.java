@@ -16,7 +16,6 @@ public class InputInstruction extends IntCodeInstruction {
 
   @Override
   public Optional<Integer> execute(int[] programMemory) {
-    System.out.println("Encountered InputInstruction. Please enter an integer and press enter:");
     Scanner in = new Scanner(System.in);
     var input = Integer.parseInt(in.nextLine().trim());
     writeToAddressInParameter(0, input, programMemory);
