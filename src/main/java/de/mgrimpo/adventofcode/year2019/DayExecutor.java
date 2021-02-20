@@ -18,7 +18,7 @@ public class DayExecutor {
 
   public static void main(String[] args) {
     final int[] classesToLoad = new int[]{
-        6
+        2, 5
     };
     executeAndPrintSolutions(classesToLoad);
   }

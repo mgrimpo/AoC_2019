@@ -1,16 +1,20 @@
 package de.mgrimpo.adventofcode.year2019.intcodemachine;
 
+import java.util.Scanner;
+
 public class InstructionFactory {
 
-  private InstructionFactory() {
+  private Scanner scanner;
+
+  public InstructionFactory() {
   }
 
-  public static IntCodeInstruction createInstruction(int[] programMemory, int instructionPointer) {
+  public IntCodeInstruction createInstruction(int[] programMemory, int instructionPointer) {
     var opCode = programMemory[instructionPointer] % 100;
     if (opCode == 1 || opCode == 2) {
       return new ArithmeticInstruction(programMemory, instructionPointer);
     } else if (opCode == 3) {
-      return new InputInstruction(programMemory, instructionPointer);
+      return createInputInstruction(programMemory, instructionPointer);
     } else if (opCode == 4) {
       return new OutputInstruction(programMemory, instructionPointer);
     } else if (opCode == 5) {
@@ -26,5 +30,11 @@ public class InstructionFactory {
     } else {
       throw new RuntimeException("Invalid Op Code: " + opCode);
     }
+  }
+
+  private InputInstruction createInputInstruction(int[] programMemory, int instructionPointer) {
+    //FIXME: the way input flows through the 'machine' is too opaque
+    if (scanner == null) scanner = new Scanner(System.in);
+    return new InputInstruction(scanner, programMemory, instructionPointer);
   }
 }

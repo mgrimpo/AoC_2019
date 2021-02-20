@@ -25,8 +25,9 @@ public class IntCodeProgram implements Cloneable {
    */
   public void execute() {
     int instructionPointer = 0;
+    var factory = new InstructionFactory();
     while (instructionPointer < memory.length) {
-      var instruction = InstructionFactory.createInstruction(memory, instructionPointer);
+      var instruction = factory.createInstruction(memory, instructionPointer);
       if (instruction instanceof HaltingInstruction) {
         break;
       }

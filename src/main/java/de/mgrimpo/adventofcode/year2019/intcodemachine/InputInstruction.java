@@ -5,8 +5,13 @@ import java.util.Scanner;
 
 public class InputInstruction extends IntCodeInstruction {
 
-  InputInstruction(int[] programMemory, int instructionPointer) {
+
+  private final Scanner scanner;
+
+
+  InputInstruction(Scanner scanner, int[] programMemory, int instructionPointer) {
     super(programMemory, instructionPointer);
+    this.scanner = scanner;
   }
 
   @Override
@@ -16,8 +21,7 @@ public class InputInstruction extends IntCodeInstruction {
 
   @Override
   public Optional<Integer> execute(int[] programMemory) {
-    Scanner in = new Scanner(System.in);
-    var input = Integer.parseInt(in.nextLine().trim());
+    var input = Integer.parseInt(scanner.nextLine().trim());
     writeToAddressInParameter(0, input, programMemory);
     return Optional.empty();
   }
