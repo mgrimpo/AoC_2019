@@ -1,15 +1,11 @@
 package de.mgrimpo.adventofcode.year2019.days;
 
 import de.mgrimpo.adventofcode.year2019.intcodemachine.IntCodeProgram;
+import de.mgrimpo.adventofcode.year2019.permutations.PermutationUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Day7 implements Day {
 
@@ -50,34 +46,13 @@ public class Day7 implements Day {
     }
 
     public int maxThrusterSignal() {
-      return possibleSettings().stream()
+      return PermutationUtils.naiveSetBasedPermutationGenerator(Set.of(0, 1, 2, 3, 4)).stream()
           .mapToInt(setting -> thrusterSignal(setting))
           .max()
           .getAsInt();
     }
 
-    private List<int[]> possibleSettings() {
-      var unchosen = Set.of(0, 1, 2, 3, 4);
-      var permutations = new ArrayList<Integer[]>();
-      var permutation = new Integer[5];
-      permutationsHelper(permutation, unchosen, permutations);
-      // 'unbox' from Integer[] to int[]
-      return permutations.stream()
-          .map(a -> Arrays.stream(a)
-              .mapToInt(x -> x)
-              .toArray())
-          .collect(Collectors.toList());
-    }
 
-    private <T> void permutationsHelper(T[] permutation, Set<T> unchosen,
-        ArrayList<T[]> permutations) {
-      if (unchosen.size() == 0) permutations.add(permutation.clone());
-      for (var element : unchosen) {
-        permutation[unchosen.size() - 1] = element;
-        var updatedUnchosen = new HashSet<>(unchosen);
-        updatedUnchosen.remove(element);
-        permutationsHelper(permutation, updatedUnchosen, permutations);
-      }
-    }
   }
 }
+
