@@ -2,10 +2,11 @@ package de.mgrimpo.adventofcode.year2019.days;
 
 import de.mgrimpo.adventofcode.year2019.intcodemachine.IntCodeProgram;
 import de.mgrimpo.adventofcode.year2019.permutations.PermutationUtils;
+import de.mgrimpo.adventofcode.year2019.permutations.Permutator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
+import java.util.stream.StreamSupport;
 
 public class Day7 implements Day {
 
@@ -46,7 +47,9 @@ public class Day7 implements Day {
     }
 
     public int maxThrusterSignal() {
-      return PermutationUtils.naiveSetBasedPermutationGenerator(Set.of(0, 1, 2, 3, 4)).stream()
+      var permutator = new Permutator<Integer>(new Integer[]{0, 1, 2, 3, 4});
+      return StreamSupport.stream(permutator.spliterator(), false)
+          .map(PermutationUtils::boxedIntArrayToPrimitive)
           .mapToInt(setting -> thrusterSignal(setting))
           .max()
           .getAsInt();

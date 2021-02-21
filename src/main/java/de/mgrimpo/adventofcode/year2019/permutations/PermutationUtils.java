@@ -65,10 +65,12 @@ public class PermutationUtils {
   static List<int[]> boxedIntegerArrayListToPrimitiveIntArrayList(
       List<Integer[]> permutations) {
     return permutations.stream()
-        .map(a -> Arrays.stream(a)
-            .mapToInt(x -> x)
-            .toArray())
+        .map(PermutationUtils::boxedIntArrayToPrimitive)
         .collect(Collectors.toList());
+  }
+
+  public static int[] boxedIntArrayToPrimitive(Integer[] boxedArray) {
+    return Arrays.stream(boxedArray).mapToInt(x -> x).toArray();
   }
 
   private static <T> void setBasedPermutationHelper(T[] permutation, Set<T> unchosen,
